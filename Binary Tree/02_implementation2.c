@@ -4,60 +4,115 @@
 typedef struct node{
     int data;
     struct node *left,*right;
-}n;
+}node;
 
-n* createNode(int data){
-    n *newnode=(n*)malloc(sizeof(n));
+node* createNode(int data){
+    node *newnode=(node*)malloc(sizeof(node));
     newnode->data=data;
     newnode->left=newnode->right=NULL;
     return newnode;
 }
 
-typedef struct queueNode{
-    n *tree;
-    struct queueNode *next;
-}qn;
+//Queue
+typedef struct QueueNode{
+    node *treenode;
+    struct QueueNode* next;
+}QueueNode;
 
-typedef struct queue{
-    qn *front,*rear;
-}q;
+typedef struct Queue{
+    QueueNode *front,*rear;
+}Queue;
 
-q* createQ(){
-    q *Q;
-    Q->front=NULL;
-    Q->rear=NULL;
-    return Q;
+Queue* createQueue(){
+    Queue *q=(Queue*)malloc(sizeof(Queue));
+    q->front = NULL;
+    q->rear=NULL;
+    return q;
 }
 
-void enqueue(q *Q, n* treenode){
-    qn *temp;
-    if(Q->front==NULL){
-        temp=(qn*)malloc(sizeof(qn));
-        temp->tree=treenode;
-        temp->next=NULL;
-        Q->front=temp;
-        Q->rear=temp;
-    }
-    else{
-        temp=(qn*)malloc(sizeof(qn));
-        temp->tree=treenode;
-        temp->next=NULL;
-        Q->rear->next=temp;
-        Q->rear=temp;
-    }
-}
+void Enqueue(Queue *Q, node* treenode){
+    QueueNode *newnode=(QueueNode*)malloc(sizeof(QueueNode));
+    newnode->treenode=treenode;
+    newnode->next=NULL;
 
-void dequeue(q *Q){
-    if(Q->front==NULL){
-        printf("Queue is empty\n");
+    if(Q->rear==NULL) {
+        Q->front=Q->rear=newnode;
         return;
     }
-    qn *temp=Q->front;
-    Q->front=Q->front->next;
-    free(temp);
+    else{
+        Q->rear->next=newnode;
+        Q->rear=newnode;
+    }
+        
+}
+
+node* Dequeue(Queue *q){
+    if(q->front==NULL)
+        return NULL;
+    QueueNode *temp=q->front;
+    node *treenode=temp->treenode;
+    q->front=q->front->next;
+    if(q->front==NULL)
+        q->rear=NULL;
+        free(temp);
+    return treenode;
+}
+
+
+node *insert(node *root, int val){
+    node *newnode=createNode(val);
+    if(root==NULL){
+        root=newnode;
+        return root;
+    }
+    else{
+        Queue *q=createQueue();
+        Enqueue(q,root);
+        while(q->front!=NULL){
+            node *temp=Dequeue(q);
+            if(temp->left==NULL){
+                temp->left=newnode;
+                break;
+            }
+            else{
+                Enqueue(q,temp->left);
+            }
+            if(temp->right==NULL){
+                temp->right=newnode;
+                break;
+            }
+            else{
+                Enqueue(q,temp->right);
+            }
+        }
+        free(q);
+    }
+    
+
+    return root;
+}
+
+void inorder(node *root){
+    if(root==NULL) return;
+    
+    inorder(root->left);
+    printf("%d ", root->data);
+    inorder(root->right);
 }
 int main() {
-    
-    
+    node *root=NULL;
+    int n;
+    printf("Enter how many nodes you want to enter: ");
+    scanf("%d",&n);
+    for (int i = 0; i < n; i++)
+    {
+        int val;
+        printf("Enter Node value of node %d: ",i+1);
+        scanf("%d",&val);
+        root=insert(root,val);
+        printf("\n");
+    }
+    printf("Inorder Traversal: ");
+    inorder(root);
     return 0;
 }
