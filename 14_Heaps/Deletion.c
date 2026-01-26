@@ -5,7 +5,6 @@ void swap(int *a, int *b) {
     *a = *b;
     *b = temp;
 }
-
 // TODO: Write this function
 // n is size of heap, i is index to heapify
 void heapify(int arr[], int n, int i) {
@@ -16,7 +15,6 @@ void heapify(int arr[], int n, int i) {
     if (l<n && arr[l]>arr[largest]) largest=l;
     //check for right child if exists
     if(r<n && arr[r]>arr[largest]) largest=r;
-
     //swap?
     if (largest!=i){
         swap(&arr[i],&arr[largest]);
@@ -24,7 +22,6 @@ void heapify(int arr[], int n, int i) {
         heapify(arr,n,largest);
     }
 }
-
 // TODO: Write this function
 // Returns the deleted value, updates n (pass n by reference or handle size externally)
 int deleteRoot(int arr[], int *n) {
