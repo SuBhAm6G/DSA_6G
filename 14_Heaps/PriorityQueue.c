@@ -93,6 +93,10 @@ int main() {
     enqueue(pq, &n, 10);
     enqueue(pq, &n, 50);
     enqueue(pq, &n, 20);
+    //Memory representation
+    printf("Heap array: ");
+    for(int i=0; i<n; i++) printf("%d ", pq[i]);
+    printf("\n");
     
     printf("Highest Priority Task: %d\n", peek(pq, n)); // Should be 50
 
