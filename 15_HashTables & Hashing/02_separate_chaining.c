@@ -52,6 +52,27 @@ int search(int key) {
 
 }
 
+// Delete a key from the hash table
+void delete(int key) {
+    int idx = key % SIZE;
+    struct Node* temp = hashTable[idx];
+    struct Node* prev = NULL;
+    
+    while (temp != NULL) {
+        if (temp->key == key) {
+            if (prev == NULL) {
+                hashTable[idx] = temp->next;
+            } else {
+                prev->next = temp->next;
+            }
+            free(temp);
+            return;
+        }
+        prev = temp;
+        temp = temp->next;
+    }
+}
+
 // Function to print the table (for visualization)
 void printTable() {
     for (int i = 0; i < SIZE; i++) {
